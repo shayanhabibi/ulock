@@ -25,6 +25,25 @@ const
   ULF_WAKE_MASK* = ULF_NO_ERRNO or ULF_WAKE_ALL or ULF_WAKE_THREAD or
                   ULF_WAKE_ALLOW_NON_OWNER
 
+type
+  ULockOp* = enum
+    CompareAndWait = 1
+    UnfairLock = 2
+    CompareAndWaitShared = 3
+    UnfairLock64Shared = 4
+    CompareAndWait64 = 5
+    CompareAndWait64Shared = 6
+  
+  ULockFlags* = enum
+    WakeAll = 0x00000100
+    WakeThread = 0x00000200
+    WakeAllowNonOwner = 0x00000400
+
+    WaitWorkQDataContention = 0x00010000
+    WaitCancelPoint = 0x00020000
+    WaitAdaptiveSpin = 0x00040000
+
+
 proc ulock_wait*(operation: uint32; address: pointer; value: uint64;
                 timeout: uint32): cint {.importc:"__ulock_wait", cdecl.}
 # Returns number of threads still waiting on ulock it seems. Returns -1 if there is an error or it times out
